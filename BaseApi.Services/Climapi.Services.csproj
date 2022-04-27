@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="gabusdev.thefetcher.test" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Exceptions\Forbidden\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BaseApi.Common\Climapi.Common.csproj" />
+    <ProjectReference Include="..\BaseApi.DataEF\Climapi.DataEF.csproj" />
+  </ItemGroup>
+
+</Project>
