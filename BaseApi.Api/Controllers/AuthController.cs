@@ -6,11 +6,12 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace WebApi.Api.Controllers
 {
-    [Route("api/user")]
+    [Route("api")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -31,32 +32,41 @@ namespace WebApi.Api.Controllers
             _registerValidator = registerValidator;
         }
 
+        // POST api/register
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IResult> Register([FromBody] RegisterDto registerDTO)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDTO)
         {
             Log.Information($"Registration Attemp for {registerDTO.Email}");
-            var result = _registerValidator.Validate(registerDTO);
-            if (!result.IsValid)
-                return Results.BadRequest(result);
-
+            
             var user = await _authManager.RegisterAsync(registerDTO);
             var userDto = _mapper.Map<UserDto>(user);
-            return Results.Created($"user/{userDto.UserName}", userDto);
+            
+            return Created($"api/user/me", userDto);
         }
 
+        // POST api/login
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IResult> Login([FromBody] LoginDto loginDTO)
+        public async Task<ActionResult<string>> Login([FromBody] LoginDto loginDTO)
         {
             Log.Information($"Login Attemp for {loginDTO.Email}");
-            var result = _loginValidator.Validate(loginDTO);
-            if (!result.IsValid)
-                return Results.BadRequest(result);
-
+            
             var token = await _authManager.AuthenticateAsync(loginDTO);
 
-            return Results.Created($"user/",new { Token = token });
+            return Ok(token);
+        }
+
+        // POST api/passwordchange
+        [HttpPost("passwordchange")]
+        public async Task<ActionResult> ChangePassword(ChangePasswordDto chngPassDto)
+        {
+            var currentId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)!.Value;
+            Log.Information($"Password Reset Attemp for {currentId}");
+            
+            await _authManager.ChangePassword(chngPassDto, currentId);
+
+            return NoContent();
         }
     }
 }

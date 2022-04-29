@@ -1,5 +1,5 @@
-﻿using Climapi.Core.Validations;
-using Common.DTO.Request.Validations;
+﻿using Climapi.Common.DTO.Request.Validations;
+using Climapi.Core.Validations;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,7 +1,7 @@
 ﻿using Climapi.Common.DTO.Request;
 using FluentValidation;
 
-namespace Common.DTO.Request.Validations
+namespace Climapi.Common.DTO.Request.Validations
 {
     public class RegisterDTOValidator : AbstractValidator<RegisterDto>
     {

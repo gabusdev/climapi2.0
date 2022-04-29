@@ -8,7 +8,7 @@ namespace Climapi.Services.Exceptions.BaseExceptions
         public BaseBadRequestException(string? message = null, int customCode = 0) : base()
         {
             HttpCode = (int)HttpStatusCode.BadRequest;
-            CustomCode = 400000 + (Convert.ToBoolean(customCode) ? customCode : 0);
+            CustomCode = 400000 + customCode;
             CustomMessage = message ?? CustomCode.ToString();
         }
     }

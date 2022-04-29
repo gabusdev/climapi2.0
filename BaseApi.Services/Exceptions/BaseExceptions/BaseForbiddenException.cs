@@ -8,7 +8,7 @@ namespace Climapi.Services.Exceptions.BaseExceptions
         public BaseForbiddenException(string? message = null, int customCode = 0) : base()
         {
             HttpCode = (int)HttpStatusCode.Forbidden;
-            CustomCode = 403000 + (Convert.ToBoolean(customCode) ? customCode : 0);
+            CustomCode = 403000 + customCode;
             CustomMessage = message ?? CustomCode.ToString();
         }
     }

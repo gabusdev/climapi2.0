@@ -9,5 +9,6 @@ namespace Climapi.Services
     {
         Task<string> AuthenticateAsync(LoginDto loginDto);
         Task<UserDto> RegisterAsync(RegisterDto loginDto);
+        Task ChangePassword(ChangePasswordDto chngPassDto, string id);
     }
 }

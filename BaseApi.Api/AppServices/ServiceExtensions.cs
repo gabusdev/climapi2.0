@@ -27,7 +27,7 @@ namespace Climapi.Api.AppServices
             // conString = System.Environment.GetEnvironmentVariable("DbConString");
 
             services.ConfigureApiVersioning();
-            services.ConfigureAuthorization();
+            services.ConfigureAuthorization(locked: true);
             services.ConfigureCaching();
             services.ConfigureCors();
             services.ConfigureDI();

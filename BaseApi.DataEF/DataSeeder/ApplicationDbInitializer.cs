@@ -33,6 +33,7 @@ namespace Climapi.Api.AppServices.DataSeed
                     if (result.Succeeded)
                     {
                         userManager.AddToRoleAsync(user, Enum.GetName(RoleEnum.Admin)).Wait();
+                        userManager.AddToRoleAsync(user, Enum.GetName(RoleEnum.User)).Wait();
                     }
                 }
 

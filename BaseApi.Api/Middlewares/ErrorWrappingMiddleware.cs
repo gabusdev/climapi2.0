@@ -14,15 +14,13 @@ namespace Climapi.Api.Middlewares
         public ErrorWrappingMiddleware(RequestDelegate next)
         {
             _next = next;
-            Message = "";
         }
 
-        private string Message { get; set; }
+        private string Message { get; set; } = null!;
         private int CustomStatusCode { get; set; }
 
         public async Task Invoke(HttpContext context)
         {
-            Message = "";
             CustomStatusCode = 500000;
             try
             {
@@ -41,7 +39,7 @@ namespace Climapi.Api.Middlewares
                 Message = ex.Message;
                 var exMethod = context.Request.Method;
                 var exPath = context.Request.Path;
-                Log.Error(ex, $"Error occurred at {exPath} with method {exMethod} and message: {Message}");
+                Log.Error(ex, $"Uncontrolled Error occurred at {exPath} with method {exMethod} and message: {Message}");
             }
 
             if (!context.Response.HasStarted)

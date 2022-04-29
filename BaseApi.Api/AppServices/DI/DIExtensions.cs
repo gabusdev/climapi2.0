@@ -9,6 +9,7 @@ namespace Climapi.Api.AppServices.DI
     {
         public static void ConfigureDI(this IServiceCollection services)
         {
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthManagerService, AuthManagerService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }

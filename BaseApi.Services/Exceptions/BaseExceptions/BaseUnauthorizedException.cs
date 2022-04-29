@@ -8,7 +8,7 @@ namespace Climapi.Services.Exceptions.BaseExceptions
         public BaseUnauthorizedException(string? message = null, int customCode = 0) : base()
         {
             HttpCode = (int)HttpStatusCode.Unauthorized;
-            CustomCode = 401000 + (Convert.ToBoolean(customCode) ? customCode : 0);
+            CustomCode = 401000 + customCode;
             CustomMessage = message ?? CustomCode.ToString();
         }
     }

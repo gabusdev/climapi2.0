@@ -21,6 +21,8 @@ namespace Climapi.Api.AppServices.Authorization
                 }
                 opt.AddPolicy("AdminRights",
                     policy => policy.RequireRole(Enum.GetName(RoleEnum.Admin)!));
+                opt.AddPolicy("UserRights",
+                    policy => policy.RequireRole(Enum.GetName(RoleEnum.User)!));
             });
 
         }
