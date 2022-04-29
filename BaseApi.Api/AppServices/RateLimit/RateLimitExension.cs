@@ -22,6 +22,7 @@ namespace Climapi.Api.AppServices.RateLimit
             {
                 o.GeneralRules = rules;
             });
+
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();

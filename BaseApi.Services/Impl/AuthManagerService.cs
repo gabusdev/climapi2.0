@@ -59,7 +59,6 @@ namespace Climapi.Services.Impl
             // Return de JWT Token
             return await CreateToken(user);
         }
-
         public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
         {
             // Validate dto
@@ -81,18 +80,26 @@ namespace Climapi.Services.Impl
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
         }
-        public async Task ChangePassword(ChangePasswordDto chngPassDto, string id)
+        public async Task ChangePasswordAsync(ChangePasswordDto chngPassDto, string id)
         {
             // Validate Dto
             Validate(_chngPassValidator, chngPassDto);
 
             // Get User with passed Id
             User user = await GetUser(id);
-
+            
             // Attemp to change Password or throw Exception
             var result = await _userManager.ChangePasswordAsync(user, chngPassDto.Password, chngPassDto.NewPassword);
             if (!result.Succeeded)
                 throw new UnauthorizedException(result.Errors.First().Description);
+        }
+        public Task<string> GetResetPasswordTokenAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
+        public Task ResetPasswordAsync(string token)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<string> CreateToken(User user)
@@ -160,5 +167,6 @@ namespace Climapi.Services.Impl
             if (user == null) throw new UserNotFoundException();
             return user;
         }
+
     }
 }

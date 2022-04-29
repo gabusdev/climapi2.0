@@ -56,7 +56,7 @@ namespace WebApi.Api.Controllers
             var currentId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)!.Value;
             Log.Information($"Password Reset Attemp for {currentId}");
 
-            await _authManager.ChangePassword(chngPassDto, currentId);
+            await _authManager.ChangePasswordAsync(chngPassDto, currentId);
 
             return NoContent();
         }
