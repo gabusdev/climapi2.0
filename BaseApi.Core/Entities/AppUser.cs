@@ -2,9 +2,9 @@
 
 namespace Climapi.Core.Entities
 {
-    public class User : IdentityUser
+    public class AppUser : IdentityUser
     {
-        public User()
+        public AppUser()
         {
             Queries = new HashSet<QueryRecord>();
         }

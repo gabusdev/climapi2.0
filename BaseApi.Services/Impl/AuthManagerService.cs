@@ -19,14 +19,14 @@ namespace Climapi.Services.Impl
     public class AuthManagerService : IAuthManagerService
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IValidator<LoginDto> _loginValidator;
         private readonly IValidator<RegisterDto> _registerValidator;
         private readonly IValidator<ChangePasswordDto> _chngPassValidator;
 
         public AuthManagerService(IConfiguration configuration,
-            UserManager<User> userManager, IMapper mapper,
+            UserManager<AppUser> userManager, IMapper mapper,
             IValidator<LoginDto> loginValidator, IValidator<RegisterDto> registerValidator,
             IValidator<ChangePasswordDto> chngPassValidator)
         {
@@ -66,7 +66,7 @@ namespace Climapi.Services.Impl
 
             // Parse data to User object and try to Create it
             // Throw exception if error
-            var user = _mapper.Map<User>(registerDto);
+            var user = _mapper.Map<AppUser>(registerDto);
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
                 throw new InvalidFieldBadRequestException(result.Errors.First().Description, (int)CustomCodeEnum.FailedRegistration);
@@ -86,7 +86,7 @@ namespace Climapi.Services.Impl
             Validate(_chngPassValidator, chngPassDto);
 
             // Get User with passed Id
-            User user = await GetUser(id);
+            AppUser user = await GetUser(id);
             
             // Attemp to change Password or throw Exception
             var result = await _userManager.ChangePasswordAsync(user, chngPassDto.Password, chngPassDto.NewPassword);
@@ -102,7 +102,7 @@ namespace Climapi.Services.Impl
             throw new NotImplementedException();
         }
 
-        private async Task<string> CreateToken(User user)
+        private async Task<string> CreateToken(AppUser user)
         {
             var credentials = GetSigningCredentials();
             var claims = await GetClaims(user);
@@ -117,7 +117,7 @@ namespace Climapi.Services.Impl
 
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha512Signature);
         }
-        private async Task<List<Claim>> GetClaims(User user)
+        private async Task<List<Claim>> GetClaims(AppUser user)
         {
             var issuer = _configuration.GetSection("Jwt").GetValue<string>("Issuer");
             var roles = await _userManager.GetRolesAsync(user);
@@ -159,10 +159,10 @@ namespace Climapi.Services.Impl
                 throw new InvalidFieldBadRequestException(result.Errors.First().ErrorMessage);
         }
 
-        private async Task<User> GetUser(string id)
+        private async Task<AppUser> GetUser(string id)
         {
             // Search for the user with given id
-            User user = await _userManager.FindByIdAsync(id);
+            AppUser user = await _userManager.FindByIdAsync(id);
             // If user does not exists, throw Exception
             if (user == null) throw new UserNotFoundException();
             return user;

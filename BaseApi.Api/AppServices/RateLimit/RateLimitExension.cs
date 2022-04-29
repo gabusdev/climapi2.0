@@ -14,8 +14,14 @@ namespace Climapi.Api.AppServices.RateLimit
                 new RateLimitRule
                 {
                     Endpoint = "*",
-                    Limit = 1,
+                    Limit = 2,
                     Period = "1s"
+                },
+                new RateLimitRule
+                {
+                    Endpoint = "*",
+                    Limit = 30,
+                    Period = "1m"
                 }
             };
             services.Configure<IpRateLimitOptions>(o =>

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Climapi.DataEF
 {
-    public class CoreDbContext : IdentityDbContext<User>
+    public class CoreDbContext : IdentityDbContext<AppUser>
     {
         public CoreDbContext(DbContextOptions option) : base(option) { }
 

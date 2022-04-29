@@ -8,7 +8,7 @@ namespace Climapi.Api.AppServices.Identity
     {
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            var builder = services.AddIdentityCore<User>(q =>
+            var builder = services.AddIdentityCore<AppUser>(q =>
             {
                 q.User.RequireUniqueEmail = true;
             });

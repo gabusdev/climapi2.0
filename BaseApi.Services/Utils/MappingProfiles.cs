@@ -9,8 +9,8 @@ namespace Climapi.Services.Utils
     {
         public MappingProfiles()
         {
-            CreateMap<RegisterDto, User>();
-            CreateMap<User, UserDto>();
+            CreateMap<RegisterDto, AppUser>();
+            CreateMap<AppUser, UserDto>();
         }
     }
 }

@@ -17,11 +17,11 @@ namespace Climapi.Api.AppServices.DataSeed
                 context.Database.EnsureCreated();
 
                 var userManager =
-                         serviceScope.ServiceProvider.GetService<UserManager<User>>()!;
+                         serviceScope.ServiceProvider.GetService<UserManager<AppUser>>()!;
 
                 if (userManager.FindByEmailAsync("admin@mail.com").Result == null)
                 {
-                    var user = new User
+                    var user = new AppUser
                     {
                         UserName = "Administrator",
                         Email = "admin@mail.com"
@@ -38,7 +38,7 @@ namespace Climapi.Api.AppServices.DataSeed
 
                 if (userManager.FindByEmailAsync("guest@mail.com").Result == null)
                 {
-                    var user = new User
+                    var user = new AppUser
                     {
                         UserName = "Guest",
                         Email = "guest@mail.com"

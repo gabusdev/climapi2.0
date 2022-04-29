@@ -13,13 +13,13 @@ namespace Climapi.Services.Impl
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IValidator<RegisterDto> _registerValidator;
         private readonly IValidator<UpdateUserDto> _updateValidator;
 
         public UserService(IMapper mapper,
-            UserManager<User> userManager,
+            UserManager<AppUser> userManager,
             IValidator<RegisterDto> registerValidator,
             IValidator<UpdateUserDto> updateValidator)
         {
@@ -31,7 +31,7 @@ namespace Climapi.Services.Impl
 
         public async Task Delete(string id)
         {
-            User user = await GetUser(id);
+            AppUser user = await GetUser(id);
             var result = await _userManager.DeleteAsync(user);
             // If Delete failed throw Exception
             if (!result.Succeeded) throw new DbUpdateFailedBadRequestException(result.Errors.First().Description);
@@ -39,7 +39,7 @@ namespace Climapi.Services.Impl
 
         public async Task<UserDto> Get(string id)
         {
-            User user = await GetUser(id);
+            AppUser user = await GetUser(id);
             UserDto dto = _mapper.Map<UserDto>(user);
 
             dto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
@@ -56,11 +56,11 @@ namespace Climapi.Services.Impl
             Validate(_registerValidator, newUser);
 
             // Find actual user with passed id and delete it
-            User current = await GetUser(id);
+            AppUser current = await GetUser(id);
             await Delete(current.Id);
 
             // Create new user with same Id than previous
-            User user = _mapper.Map<User>(newUser);
+            AppUser user = _mapper.Map<AppUser>(newUser);
             user.Id = current.Id;
 
             // Add User
@@ -79,7 +79,7 @@ namespace Climapi.Services.Impl
             Validate(_registerValidator, userDto);
 
             // Try to parse and add User
-            User user = _mapper.Map<User>(userDto);
+            AppUser user = _mapper.Map<AppUser>(userDto);
             var result = await _userManager.CreateAsync(user, userDto.Password);
             // If Create failed throw exception
             if (!result.Succeeded) throw new DbUpdateFailedBadRequestException(result.Errors.First().Description);
@@ -100,7 +100,7 @@ namespace Climapi.Services.Impl
         {
             Validate(_updateValidator, newData);
 
-            User current = await GetUser(id);
+            AppUser current = await GetUser(id);
             // Change atributes of current user for ones of newUser with auxiliar method
             UpdateUser(current, newData);
 
@@ -110,16 +110,16 @@ namespace Climapi.Services.Impl
         }
 
 
-        private async Task<User> GetUser(string id)
+        private async Task<AppUser> GetUser(string id)
         {
             // Search for the user with given id
-            User user = await _userManager.FindByIdAsync(id);
+            AppUser user = await _userManager.FindByIdAsync(id);
             // If user does not exists, throw Exception
             if (user == null) throw new UserNotFoundException();
             return user;
         }
 
-        private static void UpdateUser(User actualUser, UpdateUserDto newData)
+        private static void UpdateUser(AppUser actualUser, UpdateUserDto newData)
         {
             actualUser.Email = newData.Email;
             actualUser.UserName = newData.Username;

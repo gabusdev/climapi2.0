@@ -12,7 +12,7 @@ namespace DataEF.UnitOfWork
         private readonly CoreDbContext _context;
         private bool disposed = false;
 
-        public UnitOfWork(CoreDbContext context, UserManager<User> userManager)
+        public UnitOfWork(CoreDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             QueryRecords = QueryRecords ?? new GenericRepository<QueryRecord>(_context);
