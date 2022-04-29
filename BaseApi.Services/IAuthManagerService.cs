@@ -10,6 +10,6 @@ namespace Climapi.Services
         Task<UserDto> RegisterAsync(RegisterDto loginDto);
         Task ChangePasswordAsync(ChangePasswordDto chngPassDto, string id);
         Task<string> GetResetPasswordTokenAsync(string email);
-        Task ResetPasswordAsync(string token);
+        Task ResetPasswordAsync(ResetPasswordDto newPass);
     }
 }

@@ -24,11 +24,13 @@ namespace Climapi.Services.Impl
         private readonly IValidator<LoginDto> _loginValidator;
         private readonly IValidator<RegisterDto> _registerValidator;
         private readonly IValidator<ChangePasswordDto> _chngPassValidator;
+        private readonly IValidator<ResetPasswordDto> _resetPassValidator; 
 
         public AuthManagerService(IConfiguration configuration,
             UserManager<AppUser> userManager, IMapper mapper,
             IValidator<LoginDto> loginValidator, IValidator<RegisterDto> registerValidator,
-            IValidator<ChangePasswordDto> chngPassValidator)
+            IValidator<ChangePasswordDto> chngPassValidator,
+            IValidator<ResetPasswordDto> resetPassValidator)
         {
             _configuration = configuration;
             _userManager = userManager;
@@ -36,18 +38,15 @@ namespace Climapi.Services.Impl
             _loginValidator = loginValidator;
             _registerValidator = registerValidator;
             _chngPassValidator = chngPassValidator;
+            _resetPassValidator = resetPassValidator;
         }
         public async Task<string> AuthenticateAsync(LoginDto loginDto)
         {
             // Validate de Dto
             Validate(_loginValidator, loginDto);
 
-            // Search for the user with email given and throw exception if not exists
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            if (user == null)
-            {
-                throw new UserNotFoundException("The User with such Mail doesn't exist", (int)CustomCodeEnum.UserNotFound);
-            }
+            // Get the user by email
+            var user = await GetUserByEMail(loginDto.Email!);
 
             // Check for Password from dto match user password and throw exception if not
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
@@ -86,20 +85,32 @@ namespace Climapi.Services.Impl
             Validate(_chngPassValidator, chngPassDto);
 
             // Get User with passed Id
-            AppUser user = await GetUser(id);
+            AppUser user = await GetUserById(id);
             
             // Attemp to change Password or throw Exception
             var result = await _userManager.ChangePasswordAsync(user, chngPassDto.Password, chngPassDto.NewPassword);
             if (!result.Succeeded)
                 throw new UnauthorizedException(result.Errors.First().Description);
         }
-        public Task<string> GetResetPasswordTokenAsync(string email)
+        public async Task<string> GetResetPasswordTokenAsync(string email)
         {
-            throw new NotImplementedException();
+            // Get the user by email
+            AppUser current = await GetUserByEMail(email);
+            // Generate Password Reset Token for the user
+            string token = await _userManager.GeneratePasswordResetTokenAsync(current);
+            
+            return token;
         }
-        public Task ResetPasswordAsync(string token)
+        public async Task ResetPasswordAsync(ResetPasswordDto newPass)
         {
-            throw new NotImplementedException();
+            // Validate new Password
+            Validate(_resetPassValidator, newPass);
+            // Get user by Id
+            var user = await GetUserByEMail(newPass.Email);
+
+            var result = await _userManager.ResetPasswordAsync(user, newPass.ResetToken, newPass.NewPassword);
+            if (!result.Succeeded)
+                throw new InvalidFieldBadRequestException(result.Errors.First().Description);
         }
 
         private async Task<string> CreateToken(AppUser user)
@@ -159,12 +170,24 @@ namespace Climapi.Services.Impl
                 throw new InvalidFieldBadRequestException(result.Errors.First().ErrorMessage);
         }
 
-        private async Task<AppUser> GetUser(string id)
+        private async Task<AppUser> GetUserById(string? id)
         {
             // Search for the user with given id
             AppUser user = await _userManager.FindByIdAsync(id);
             // If user does not exists, throw Exception
             if (user == null) throw new UserNotFoundException();
+            return user;
+        }
+
+        private async Task<AppUser> GetUserByEMail(string? email)
+        {
+            // Search for the user with given email
+            var user = await _userManager.FindByEmailAsync(email);
+            // If user doesnt exists throw an 404 Exception
+            if (user == null)
+            {
+                throw new UserNotFoundException("The User with such Mail doesn't exist", (int)CustomCodeEnum.UserNotFound);
+            }
             return user;
         }
 

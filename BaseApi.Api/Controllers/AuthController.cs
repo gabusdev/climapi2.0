@@ -60,5 +60,26 @@ namespace WebApi.Api.Controllers
 
             return NoContent();
         }
+
+        // POST api/forgotpassword
+        [HttpPost("forgotpassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult<string>> GetResetPasswordToken([FromBody] string email)
+        {
+            Log.Information($"Reset Password Token Requested for User with mail {email}");
+            var token = await _authManager.GetResetPasswordTokenAsync(email);
+
+            return Ok(token);
+        }
+
+        [HttpPost("resetpassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ResetPassword(ResetPasswordDto resetPassDto)
+        {
+            Log.Information($"Reset Password Requested for User with mail {resetPassDto.Email}");
+            await _authManager.ResetPasswordAsync(resetPassDto);
+
+            return NoContent();
+        }
     }
 }
