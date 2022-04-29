@@ -12,9 +12,6 @@ using Climapi.Api.AppServices.RateLimit;
 using Climapi.Api.AppServices.Swagger;
 using Climapi.Api.Middlewares;
 using Climapi.Services.Utils;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Climapi.Api.AppServices
 {

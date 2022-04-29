@@ -7,7 +7,7 @@ namespace Climapi.Core.Validations
     {
         public UserValidator()
         {
-            
+
         }
     }
 }

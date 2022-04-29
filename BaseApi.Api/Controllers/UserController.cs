@@ -1,8 +1,6 @@
 ﻿using Climapi.Common.DTO.Request;
 using Climapi.Common.DTO.Response;
-using Climapi.Core.Entities;
 using Climapi.Services;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -16,16 +14,10 @@ namespace Climapi.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IValidator<RegisterDto> _registerValidator;
-        private readonly IValidator<UpdateUserDto> _updateValidator;
 
-        public UserController(IUserService userService,
-            IValidator<RegisterDto> registerValidator,
-            IValidator<UpdateUserDto> updateValidator)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _registerValidator = registerValidator;
-            _updateValidator = updateValidator;
         }
 
         // GET: api/user
@@ -43,7 +35,7 @@ namespace Climapi.Api.Controllers
         {
             return Ok(await _userService.Get(id));
         }
-        
+
         // GET api/user/me
         [HttpGet("me")]
         public async Task<ActionResult<UserDto>> Info()
@@ -57,11 +49,6 @@ namespace Climapi.Api.Controllers
         [Authorize(Policy = "AdminRights")]
         public async Task<ActionResult<UserDto>> Post(RegisterDto newUser)
         {
-            // Check for validity of newUser Dto
-            var result = _registerValidator.Validate(newUser);
-            if (!result.IsValid)
-                return BadRequest(result);
-
             var user = await _userService.Post(newUser);
             return Created($"api/user/{user.Id}", user);
         }
@@ -71,24 +58,14 @@ namespace Climapi.Api.Controllers
         [Authorize(Policy = "AdminRights")]
         public async Task<ActionResult> SoftUpdate(UpdateUserDto newData, string id)
         {
-            // Check for validity of newUser Dto
-            var result = _updateValidator.Validate(newData);
-            if (!result.IsValid)
-                return BadRequest(result.Errors);
-
             await _userService.Put(id, newData);
             return NoContent();
         }
-        
+
         // PUT api/user
         [HttpPut()]
         public async Task<ActionResult> Put(UpdateUserDto newData)
         {
-            // Check for validity of newUser Dto
-            var result = _updateValidator.Validate(newData);
-            if (!result.IsValid)
-                return BadRequest(result);
-
             string id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)!.Value;
             await _userService.Put(id, newData);
             return NoContent();
@@ -111,6 +88,6 @@ namespace Climapi.Api.Controllers
             await _userService.Delete(id);
             return NoContent();
         }
-        
+
     }
 }

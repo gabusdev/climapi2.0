@@ -2,9 +2,6 @@
 using Climapi.DataEF;
 using Climapi.DataEF.Repository;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 
 namespace DataEF.UnitOfWork
 {

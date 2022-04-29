@@ -4,7 +4,6 @@ using Climapi.DataEF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Climapi.Api.AppServices.DataSeed
 {
@@ -19,7 +18,7 @@ namespace Climapi.Api.AppServices.DataSeed
 
                 var userManager =
                          serviceScope.ServiceProvider.GetService<UserManager<User>>()!;
-                
+
                 if (userManager.FindByEmailAsync("admin@mail.com").Result == null)
                 {
                     var user = new User

@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Climapi.DataEF.Repository
 {
@@ -38,7 +34,7 @@ namespace Climapi.DataEF.Repository
         public async void Delete(object id)
         {
             var entity = await _db.FindAsync(id);
-            if (entity != null) 
+            if (entity != null)
                 _db.Remove(entity);
         }
 
@@ -82,7 +78,7 @@ namespace Climapi.DataEF.Repository
             _db.Attach(t);
             _context.Entry(t).State = EntityState.Modified;
         }
-        
+
         public async Task<bool> Exists(Expression<Func<T, bool>> match)
         {
             return await _db.FirstOrDefaultAsync(match) is not null;

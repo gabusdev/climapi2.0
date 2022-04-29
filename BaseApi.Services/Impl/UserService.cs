@@ -4,17 +4,10 @@ using Climapi.Common.DTO.Response;
 using Climapi.Core.Entities;
 using Climapi.Core.Entities.Enums;
 using Climapi.Services.Exceptions.BadRequest;
-using Climapi.Services.Exceptions.BaseExceptions;
 using Climapi.Services.Exceptions.NotFound;
-using DataEF.UnitOfWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Climapi.Services.Impl
 {
@@ -22,14 +15,20 @@ namespace Climapi.Services.Impl
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IValidator<RegisterDto> _registerValidator;
+        private readonly IValidator<UpdateUserDto> _updateValidator;
 
         public UserService(IMapper mapper,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IValidator<RegisterDto> registerValidator,
+            IValidator<UpdateUserDto> updateValidator)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _registerValidator = registerValidator;
+            _updateValidator = updateValidator;
         }
-        
+
         public async Task Delete(string id)
         {
             User user = await GetUser(id);
@@ -42,6 +41,7 @@ namespace Climapi.Services.Impl
         {
             User user = await GetUser(id);
             UserDto dto = _mapper.Map<UserDto>(user);
+
             dto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
             return dto;
         }
@@ -53,6 +53,8 @@ namespace Climapi.Services.Impl
 
         public async Task HardUpdate(string id, RegisterDto newUser)
         {
+            Validate(_registerValidator, newUser);
+
             // Find actual user with passed id and delete it
             User current = await GetUser(id);
             await Delete(current.Id);
@@ -74,6 +76,8 @@ namespace Climapi.Services.Impl
 
         public async Task<UserDto> Post(RegisterDto userDto, string[]? roles = null)
         {
+            Validate(_registerValidator, userDto);
+
             // Try to parse and add User
             User user = _mapper.Map<User>(userDto);
             var result = await _userManager.CreateAsync(user, userDto.Password);
@@ -82,7 +86,7 @@ namespace Climapi.Services.Impl
 
             // If param roles is null asign role User to the array of roles
             if (roles == null) roles = new string[] { Enum.GetName(RoleEnum.User)! };
-            
+
             // Add Roles to new user
             foreach (var role in roles)
             {
@@ -94,6 +98,8 @@ namespace Climapi.Services.Impl
 
         public async Task Put(string id, UpdateUserDto newData)
         {
+            Validate(_updateValidator, newData);
+
             User current = await GetUser(id);
             // Change atributes of current user for ones of newUser with auxiliar method
             UpdateUser(current, newData);
@@ -103,7 +109,7 @@ namespace Climapi.Services.Impl
             if (!result.Succeeded) throw new DbUpdateFailedBadRequestException(result.Errors.First().Description);
         }
 
-        
+
         private async Task<User> GetUser(string id)
         {
             // Search for the user with given id
@@ -112,12 +118,18 @@ namespace Climapi.Services.Impl
             if (user == null) throw new UserNotFoundException();
             return user;
         }
-        
+
         private static void UpdateUser(User actualUser, UpdateUserDto newData)
         {
             actualUser.Email = newData.Email;
             actualUser.UserName = newData.Username;
         }
 
+        private static void Validate<T>(IValidator<T> validator, T toValidate)
+        {
+            var result = validator.Validate(toValidate);
+            if (!result.IsValid)
+                throw new InvalidFieldBadRequestException(result.Errors.First().ErrorMessage);
+        }
     }
 }

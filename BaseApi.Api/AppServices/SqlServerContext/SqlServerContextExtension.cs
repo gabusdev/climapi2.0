@@ -1,6 +1,5 @@
 ﻿using Climapi.DataEF;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Climapi.Api.AppServices.MySqlServerContext
 {

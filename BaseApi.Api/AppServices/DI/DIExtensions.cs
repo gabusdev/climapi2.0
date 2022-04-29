@@ -1,7 +1,6 @@
 ﻿using Climapi.Services;
 using Climapi.Services.Impl;
 using DataEF.UnitOfWork;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Climapi.Api.AppServices.DI
 {

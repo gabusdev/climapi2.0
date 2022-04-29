@@ -1,7 +1,5 @@
 ﻿using Climapi.Core.Entities.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Climapi.Api.AppServices.Authorization
 {

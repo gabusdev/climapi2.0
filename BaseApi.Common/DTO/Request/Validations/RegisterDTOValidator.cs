@@ -1,5 +1,4 @@
-﻿using Climapi.Common.DTO.Request;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Climapi.Common.DTO.Request.Validations
 {

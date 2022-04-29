@@ -1,10 +1,7 @@
 ﻿using Climapi.Services.Exceptions.BaseExceptions;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
-using System;
-using System.Threading.Tasks;
 
 namespace Climapi.Api.Middlewares
 {

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace Climapi.Api.AppServices.MyCors
+﻿namespace Climapi.Api.AppServices.MyCors
 {
     public static class CorsExtensions
     {

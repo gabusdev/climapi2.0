@@ -10,13 +10,9 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Climapi.Services.Impl
 {
@@ -44,8 +40,8 @@ namespace Climapi.Services.Impl
         public async Task<string> AuthenticateAsync(LoginDto loginDto)
         {
             // Validate de Dto
-            Validate(_loginValidator,loginDto);
-            
+            Validate(_loginValidator, loginDto);
+
             // Search for the user with email given and throw exception if not exists
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null)
@@ -89,10 +85,10 @@ namespace Climapi.Services.Impl
         {
             // Validate Dto
             Validate(_chngPassValidator, chngPassDto);
-            
+
             // Get User with passed Id
             User user = await GetUser(id);
-            
+
             // Attemp to change Password or throw Exception
             var result = await _userManager.ChangePasswordAsync(user, chngPassDto.Password, chngPassDto.NewPassword);
             if (!result.Succeeded)
@@ -148,8 +144,8 @@ namespace Climapi.Services.Impl
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
-        
-        private void Validate<T> (IValidator<T> validator, T toValidate)
+
+        private static void Validate<T>(IValidator<T> validator, T toValidate)
         {
             var result = validator.Validate(toValidate);
             if (!result.IsValid)

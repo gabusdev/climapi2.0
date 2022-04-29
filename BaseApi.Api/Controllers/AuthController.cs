@@ -2,12 +2,10 @@
 using Climapi.Common.DTO.Request;
 using Climapi.Common.DTO.Response;
 using Climapi.Services;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace WebApi.Api.Controllers
 {
@@ -17,19 +15,13 @@ namespace WebApi.Api.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IAuthManagerService _authManager;
-        private readonly IValidator<LoginDto> _loginValidator;
-        private readonly IValidator<RegisterDto> _registerValidator;
 
         public AuthController(
             IMapper mapper,
-            IAuthManagerService authManager,
-            IValidator<LoginDto> loginValidator,
-            IValidator<RegisterDto> registerValidator)
+            IAuthManagerService authManager)
         {
             _mapper = mapper;
             _authManager = authManager;
-            _loginValidator = loginValidator;
-            _registerValidator = registerValidator;
         }
 
         // POST api/register
@@ -38,10 +30,10 @@ namespace WebApi.Api.Controllers
         public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDTO)
         {
             Log.Information($"Registration Attemp for {registerDTO.Email}");
-            
+
             var user = await _authManager.RegisterAsync(registerDTO);
             var userDto = _mapper.Map<UserDto>(user);
-            
+
             return Created($"api/user/me", userDto);
         }
 
@@ -51,7 +43,7 @@ namespace WebApi.Api.Controllers
         public async Task<ActionResult<string>> Login([FromBody] LoginDto loginDTO)
         {
             Log.Information($"Login Attemp for {loginDTO.Email}");
-            
+
             var token = await _authManager.AuthenticateAsync(loginDTO);
 
             return Ok(token);
@@ -63,7 +55,7 @@ namespace WebApi.Api.Controllers
         {
             var currentId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)!.Value;
             Log.Information($"Password Reset Attemp for {currentId}");
-            
+
             await _authManager.ChangePassword(chngPassDto, currentId);
 
             return NoContent();

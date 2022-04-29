@@ -1,7 +1,6 @@
 ﻿using Climapi.Core.Entities;
 using Climapi.DataEF;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Climapi.Api.AppServices.Identity
 {

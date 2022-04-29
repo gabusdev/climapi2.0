@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Climapi.Services.Exceptions.BaseExceptions
+﻿namespace Climapi.Services.Exceptions.BaseExceptions
 {
     public class CustomBaseException : Exception
     {

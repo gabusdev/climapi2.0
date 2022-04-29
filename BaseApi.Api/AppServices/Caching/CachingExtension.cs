@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Climapi.Api.AppServices.Caching
+﻿namespace Climapi.Api.AppServices.Caching
 {
     public static class CachingExtension
     {

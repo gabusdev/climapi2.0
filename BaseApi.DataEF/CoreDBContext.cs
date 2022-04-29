@@ -1,5 +1,5 @@
-﻿using Climapi.DataEF.Configurations.Entities;
-using Climapi.Core.Entities;
+﻿using Climapi.Core.Entities;
+using Climapi.DataEF.Configurations.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

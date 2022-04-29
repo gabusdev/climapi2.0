@@ -1,6 +1,4 @@
 ﻿using AspNetCoreRateLimit;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 namespace Climapi.Api.AppServices.RateLimit
 {

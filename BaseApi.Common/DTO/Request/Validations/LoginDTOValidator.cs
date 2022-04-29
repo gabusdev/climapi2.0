@@ -1,5 +1,4 @@
-﻿using Climapi.Common.DTO.Request;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Climapi.Common.DTO.Request.Validations
 {
@@ -8,7 +7,7 @@ namespace Climapi.Common.DTO.Request.Validations
         public LoginDTOValidator()
         {
             RuleFor(login => login.Email).EmailAddress().NotEmpty();
-            RuleFor(login => login.Password).NotEmpty().Length(6,30);
+            RuleFor(login => login.Password).NotEmpty().Length(6, 30);
         }
     }
 }

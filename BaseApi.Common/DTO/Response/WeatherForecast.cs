@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Climapi.Core.Entities
+﻿namespace Climapi.Core.Entities
 {
     public record WeatherForecast
     {
@@ -11,9 +9,9 @@ namespace Climapi.Core.Entities
         public int TempF { get; init; }
 
         public long IsDay { get; init; }
-        
+
         public double Lat { get; init; }
-        
+
         public double Lon { get; init; }
 
         public string Country { get; init; } = null!;

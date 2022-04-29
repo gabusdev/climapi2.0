@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Climapi.Api.AppServices.Swagger
+﻿namespace Climapi.Api.AppServices.Swagger
 {
     public static class SwaggerExtension
     {
