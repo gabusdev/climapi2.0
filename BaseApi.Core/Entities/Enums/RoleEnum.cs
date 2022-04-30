@@ -2,6 +2,7 @@
 {
     public enum RoleEnum
     {
-        Admin, User
+        Admin, User,
+        UserPro
     }
 }

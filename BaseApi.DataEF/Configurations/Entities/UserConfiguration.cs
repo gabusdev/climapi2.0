@@ -9,6 +9,8 @@ namespace Climapi.DataEF.Configurations.Entities
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             //builder.HasMany<QueryRecord>();
+            builder.HasMany(u => u.UserAppRoles)
+                .WithMany(a => a.AppUsers);
         }
     }
 }
