@@ -24,13 +24,15 @@ namespace Climapi.Services.Impl
         private readonly IValidator<LoginDto> _loginValidator;
         private readonly IValidator<RegisterDto> _registerValidator;
         private readonly IValidator<ChangePasswordDto> _chngPassValidator;
-        private readonly IValidator<ResetPasswordDto> _resetPassValidator; 
+        private readonly IValidator<ResetPasswordDto> _resetPassValidator;
+        private readonly IUserService _userService;
 
         public AuthManagerService(IConfiguration configuration,
             UserManager<AppUser> userManager, IMapper mapper,
             IValidator<LoginDto> loginValidator, IValidator<RegisterDto> registerValidator,
             IValidator<ChangePasswordDto> chngPassValidator,
-            IValidator<ResetPasswordDto> resetPassValidator)
+            IValidator<ResetPasswordDto> resetPassValidator,
+            IUserService userService)
         {
             _configuration = configuration;
             _userManager = userManager;
@@ -39,6 +41,7 @@ namespace Climapi.Services.Impl
             _registerValidator = registerValidator;
             _chngPassValidator = chngPassValidator;
             _resetPassValidator = resetPassValidator;
+            _userService = userService;
         }
         public async Task<string> AuthenticateAsync(LoginDto loginDto)
         {
@@ -58,7 +61,7 @@ namespace Climapi.Services.Impl
             // Return de JWT Token
             return await CreateToken(user);
         }
-        public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
+        private async Task<UserDto> RegisterAsyncOld(RegisterDto registerDto)
         {
             // Validate dto
             Validate(_registerValidator, registerDto);
@@ -78,6 +81,10 @@ namespace Climapi.Services.Impl
             // Return Dto with data of created user
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
+        }
+        public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
+        {
+            return await _userService.Post(registerDto);
         }
         public async Task ChangePasswordAsync(ChangePasswordDto chngPassDto, string id)
         {

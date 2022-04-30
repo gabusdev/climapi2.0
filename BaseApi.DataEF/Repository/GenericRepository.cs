@@ -69,7 +69,7 @@ namespace Climapi.DataEF.Repository
         public async Task<T?> GetAsync(Expression<Func<T, bool>> match, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _db;
-            query = AddIncludes(query, includes);
+            query = GenericRepository<T>.AddIncludes(query, includes);
             return await query.SingleOrDefaultAsync(match);
         }
 
@@ -84,7 +84,7 @@ namespace Climapi.DataEF.Repository
             return await _db.FirstOrDefaultAsync(match) is not null;
         }
 
-        private IQueryable<T> AddIncludes(IQueryable<T> query, Expression<Func<T, object>>[] includes)
+        private static IQueryable<T> AddIncludes(IQueryable<T> query, Expression<Func<T, object>>[] includes)
         {
             foreach (var include in includes)
             {
@@ -101,7 +101,7 @@ namespace Climapi.DataEF.Repository
             if (predicate is not null)
                 query = query.Where(predicate);
 
-            query = AddIncludes(query, includes);
+            query = GenericRepository<T>.AddIncludes(query, includes);
 
             if (orderBy is not null)
                 query = !desc

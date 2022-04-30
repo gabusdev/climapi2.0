@@ -40,15 +40,19 @@ namespace Climapi.Services.Impl
         public async Task<UserDto> Get(string id)
         {
             AppUser user = await GetUser(id);
-            UserDto dto = _mapper.Map<UserDto>(user);
-
-            dto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
-            return dto;
+            
+            return await MakeUserDto(user);
         }
 
         public async Task<List<UserDto>> GetAll()
         {
-            return _mapper.Map<List<UserDto>>(await _userManager.Users.ToListAsync());
+            var users = await _userManager.Users.ToListAsync();
+            var userDtos = new List<UserDto>();
+            foreach (var user in users)
+            {
+                userDtos.Add(await MakeUserDto(user));
+            }
+            return userDtos;
         }
 
         public async Task HardUpdate(string id, RegisterDto newUser)
@@ -92,8 +96,8 @@ namespace Climapi.Services.Impl
             {
                 await _userManager.AddToRoleAsync(user, role);
             }
-            var created = _mapper.Map<UserDto>(user);
-            return created;
+            
+            return await MakeUserDto(user);
         }
 
         public async Task Put(string id, UpdateUserDto newData)
@@ -113,7 +117,7 @@ namespace Climapi.Services.Impl
         private async Task<AppUser> GetUser(string id)
         {
             // Search for the user with given id
-            AppUser user = await _userManager.FindByIdAsync(id);
+            AppUser? user = await _userManager.FindByIdAsync(id);
             // If user does not exists, throw Exception
             if (user == null) throw new UserNotFoundException();
             return user;
@@ -130,6 +134,15 @@ namespace Climapi.Services.Impl
             var result = validator.Validate(toValidate);
             if (!result.IsValid)
                 throw new InvalidFieldBadRequestException(result.Errors.First().ErrorMessage);
+        }
+
+        private async Task<UserDto> MakeUserDto(AppUser user)
+        {
+            UserDto dto = _mapper.Map<UserDto>(user);
+
+            dto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
+
+            return dto;
         }
     }
 }

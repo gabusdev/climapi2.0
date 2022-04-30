@@ -4,6 +4,7 @@ using Climapi.DataEF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Climapi.DataEF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220430002743_WithNewRoles")]
+    partial class WithNewRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,21 @@ namespace Climapi.DataEF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("AppRoleAppUser", b =>
+                {
+                    b.Property<string>("AppUsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserAppRolesId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AppUsersId", "UserAppRolesId");
+
+                    b.HasIndex("UserAppRolesId");
+
+                    b.ToTable("AppRoleAppUser");
+                });
 
             modelBuilder.Entity("Climapi.Core.Entities.AppRole", b =>
                 {
@@ -60,8 +77,8 @@ namespace Climapi.DataEF.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b4fbe100-ea25-4e07-a484-d97d6fd3bb53",
-                            ConcurrencyStamp = "8175932e-a2ca-4849-ab29-9cc815e3cac5",
+                            Id = "a3c015a3-0d23-4a0d-9c50-89fd0a7117a8",
+                            ConcurrencyStamp = "07289b89-b591-4ee1-b43d-7f7b862d97d0",
                             DalyRequests = 2147483647,
                             MonthlyRequests = 2147483647,
                             Name = "Admin",
@@ -70,8 +87,8 @@ namespace Climapi.DataEF.Migrations
                         },
                         new
                         {
-                            Id = "10029d49-b521-4457-8f5e-50067a32a7da",
-                            ConcurrencyStamp = "fedb4101-4511-46af-b936-d63f860fbd95",
+                            Id = "5f11a36a-39fa-4999-a258-8a9bbe2d018d",
+                            ConcurrencyStamp = "263513ca-7c4f-4624-9f54-27d144445eb5",
                             DalyRequests = 20,
                             MonthlyRequests = 300,
                             Name = "User",
@@ -80,8 +97,8 @@ namespace Climapi.DataEF.Migrations
                         },
                         new
                         {
-                            Id = "7cae2b84-b159-4be9-a284-1350506afa56",
-                            ConcurrencyStamp = "662a0c5d-4263-43bc-8498-003cca92f25f",
+                            Id = "e006fb01-f8da-4725-8dde-289213d2fe9d",
+                            ConcurrencyStamp = "50f4497d-f2e6-4841-ab3a-be492f905329",
                             DalyRequests = 40,
                             MonthlyRequests = 600,
                             Name = "UserPro",
@@ -285,6 +302,21 @@ namespace Climapi.DataEF.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("AppRoleAppUser", b =>
+                {
+                    b.HasOne("Climapi.Core.Entities.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("AppUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Climapi.Core.Entities.AppRole", null)
+                        .WithMany()
+                        .HasForeignKey("UserAppRolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Climapi.Core.Entities.QueryRecord", b =>

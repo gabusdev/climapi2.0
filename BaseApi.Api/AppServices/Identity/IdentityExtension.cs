@@ -8,13 +8,23 @@ namespace Climapi.Api.AppServices.Identity
     {
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            var builder = services.AddIdentityCore<AppUser>(q =>
+            /**var builder = services.AddIdentityCore<AppUser>(q =>
             {
                 q.User.RequireUniqueEmail = true;
             });
-
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
-            builder.AddEntityFrameworkStores<CoreDbContext>().AddDefaultTokenProviders();
+            **/
+            services.AddIdentity<AppUser, AppRole>( o =>
+                {
+                    o.User.RequireUniqueEmail = true;
+                    // o.Password.RequiredLength = 8;
+                    // o.Password.RequireUppercase = false;
+                    // o.Password.RequiredUniqueChars = 0;
+                })
+                .AddEntityFrameworkStores<CoreDbContext>()
+                .AddDefaultTokenProviders();
+            
+            //builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
+            //builder.AddEntityFrameworkStores<CoreDbContext>().AddDefaultTokenProviders();
         }
     }
 }

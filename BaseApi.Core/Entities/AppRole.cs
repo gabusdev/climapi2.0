@@ -11,12 +11,12 @@ namespace Climapi.Core.Entities
     {
         public AppRole()
         {
-            AppUsers = new HashSet<AppUser>();
+            // AppUsers = new HashSet<AppUser>();
         }
         public int DalyRequests { get; set; }
         public int WeeklyRequests { get; set; }
         public int MonthlyRequests { get; set; }
 
-        public virtual ICollection<AppUser> AppUsers { get; set; }
+        // public virtual ICollection<AppUser> AppUsers { get; set; }
     }
 }
