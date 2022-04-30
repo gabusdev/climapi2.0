@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Climapi.DataEF
 {
-    public class CoreDbContext : IdentityDbContext<AppUser>
+    public class ApplicationDbContext: IdentityDbContext<AppUser, AppRole, string>
     {
-        public CoreDbContext(DbContextOptions option) : base(option) { }
+        public CoreDbContext(DbContextOptions<ApplicationDbContext> option) : base(option) { }
 
         public DbSet<QueryRecord>? QueryRecords { get; set; }
 
